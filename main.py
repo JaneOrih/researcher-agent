@@ -6,7 +6,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 
-from tools import search_tool, wiki_tools
+from tools import search_tool, wiki_tool
 
 from datetime import datetime
 
@@ -45,16 +45,15 @@ prompt = ChatPromptTemplate.from_messages(
     ).partial(format_instructions= parser.get_format_instructions())
 
 
-tools= [search_tool, wiki_tools] 
+tools= [search_tool, wiki_tool] 
 agent= create_tool_calling_agent(
     llm=llm,
     prompt= prompt,
-    tools= [tools]
+    tools= tools
 )
-
+query= input("Enter the topic you want to research on: ")
 agent_executor= AgentExecutor(agent= agent, tools=tools, verbose= True)
-raw_response= agent_executor.invoke({"query":"whats the generic pattern to make Nigerian food"})
-print(raw_response)
+raw_response= agent_executor.invoke({"query":query})
 
 try:
     structured_response= parser.parse(raw_response.get("output")[0]["text"])

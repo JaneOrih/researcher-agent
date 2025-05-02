@@ -4,4 +4,5 @@ langchain[groq]
 pydantic
 langchain_community
 langchain_core
+duckduckgo-search
 #wikepedia
